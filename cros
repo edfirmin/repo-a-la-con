@@ -1,1 +1,31 @@
-0;P;c;5;o;0;0v;4;0g;1;0o;1;0a;0.802;0f;0;1b;0
+// send(i, msg.c_str(), msg.length(), 0);
+
+// std::string	Command::oper(Server *server, Session *session, Message  message)
+// {
+// 	if(session->getAuthenticated() == false)
+// 		return("");
+// 	if (message.params.size() != 2)
+// 		return(Error::ERR_NEEDMOREPARAMS_461(server,session,message));
+// 	else if (message.params[1].compare(server->getOpPassword()));
+// 		return (Error::ERR_PASSWDMISMATCH_464(server, session));
+// 	else if ()
+// 	{
+// 		/* code */
+// 	}
+	
+// }
+
+std::string	Command::error(Server *server, Session *session, Message  message)
+{
+	if(session->getAuthenticated() == false || message.payload.empty())
+		return("");
+	return("Error: " + message.payload);
+}
+
+std::string	Command::quit(Server *server, Session *session, Message  message)
+{
+	if(session->getAuthenticated() == false)
+		return("");
+	server->killSession(session->getFdSocket());
+	return("Quit: " + message.payload);
+}
