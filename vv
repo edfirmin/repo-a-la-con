@@ -1,1 +1,28 @@
+
+FROM alpine:3.18
+
+# Installer les dépendances
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache nginx gettext
+
+# Créer le répertoire SSL et définir le répertoire de travail
+RUN mkdir -p /etc/nginx/ssl /var/www/html
+
+# Copier les configurations et les certificats
+COPY ./conf/nginx.conf /etc/nginx/http.d/default.conf
+COPY ./tools/edfirmin.42.crt /etc/nginx/ssl/edfirmin.42.crt
+COPY ./tools/edfirmin.42.key /etc/nginx/ssl/edfirmin.42.key
+
+# Créer l'utilisateur et le groupe nginx si nécessaire
 RUN addgroup -S nginx && adduser -S nginx -G nginx
+
+# Définir les permissions et propriétaire sur le répertoire de travail
+RUN chmod 755 /var/www/html && \
+    chown -R nginx:nginx /var/www/html
+
+# Exposer le port pour HTTPS
+EXPOSE 443
+
+# Démarrer nginx en mode non-démon
+CMD ["nginx", "-g", "daemon off;"]
