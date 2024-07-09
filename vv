@@ -1,4 +1,1 @@
-RUN chown -R www-data:www-data /var/www/html:
-0.736 chown: unknown user/group www-data:www-data
-------
-failed to solve: process "/bin/sh -c chown -R www-data:www-data /var/www/html" did not complete successfully: exit code: 1
+RUN addgroup -S nginx && adduser -S nginx -G nginx
