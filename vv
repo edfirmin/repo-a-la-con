@@ -1,41 +1,16 @@
-#include <iostream>
-#include <sstream>
+FROM alpine:3.18
 
-void    valid_user(std::string str)
-{
-    std::istringstream  copy(str.c_str());
-    std::string     line;
-    std::string     com;
-    bool pass = false;
-    // bool user = false;
-    // bool nick = false;
+WORKDIR /var/www/html
+RUN chmod 755 /var/www/html
+RUN chown -R nginx:nginx /var/www/html
 
-    
-    while ((std::getline(copy, line)) && pass == false)
-    {
-        std::cout << "line = " << line << std::endl;
-        std::istringstream  copy2(line.c_str());
-        std::getline(copy2, com, '');
-        com.
-        if (!com.compare("PASS"))
-        {
-            std::cout << "line = " << line << " / " << com << std::endl;
-            pass = true;
-            break;
-        }
-    }
-    if (pass == true)
-    {
-        while (std::getline(copy, line))
-        {
-            
-        }
-        
-    }
-}
+RUN apk update && apk upgrade &&  apk add --no-cache nginx gettext
+RUN mkdir -p /etc/nginx/ssl
 
-int main(void)
-{
-    valid_user("SOSO sdffefss\nUSER jade\nPASS lalo\nFUFU eva");
-    return 0;
-}
+COPY ./conf/nginx.conf /etc/nginx/http.d/default.conf
+COPY ./tools/edfirmin.42.crt /etc/nginx/ssl/edfirmin.42.crt
+COPY ./tools/edfirmin.42.key /etc/nginx/ssl/edfirmin.42.key
+
+EXPOSE 443
+
+CMD [ "nginx", "-g", "daemon off;" ]
